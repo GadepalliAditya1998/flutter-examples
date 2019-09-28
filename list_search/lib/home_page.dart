@@ -37,12 +37,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+/// This method displays a custom App bar that contains both Search bar and App bar and switches between them as needed.
   Widget _getCustomAppBar() {
     return PreferredSize(
         preferredSize: Size.fromHeight(56),
         child: isSearchBarActive ? showSearchBar() : showAppBar());
   }
 
+/// This method displays the App bar with a Title and Search icon Button
   Widget showAppBar() {
     return AppBar(
       title: Text(widget.title),
@@ -61,6 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+/// Handles Back button tap i.e.
+/// When the Search Bar is visible, on Backbutton tap it wont exit the application but closes the search bar
+/// When  the search bar is Hidden, On back button tap it will exit the application.
   Future<bool> handleBackButtonPressed() async {
     if (isSearchBarActive) {
       toggleSearchBar(false);
@@ -69,13 +74,16 @@ class _MyHomePageState extends State<MyHomePage> {
       return true;
   }
 
+/// Acts as a method to toggle the visibility of the Search Bar (show/hide)
   void toggleSearchBar(bool status) {
+    searchResultData.clear();
     setState(() {
-      if (!status) searchBarTextController.text = "";
+      if (!status) searchBarTextController = TextEditingController();
       isSearchBarActive = status;
     });
   }
 
+/// Displays the search Bar with a TextField inside it.
   Widget showSearchBar() {
     return Container(
       color: Theme.of(context).primaryColor,
@@ -108,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+/// Implements the Text Search inside the list when user types inside the Text Field.
   void onSearchBarTextChanged(String textToBeSearched) {
     searchResultData = initialData
         .where(
@@ -120,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+/// Displays the Results (List Items)
   Widget showResults(List data) {
     return ListView.builder(
       itemCount: data.length,
@@ -132,15 +142,17 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+/// The Body that a user sees.
   Widget _getBody() {
     if (isSearchBarActive && searchResultData.isNotEmpty)
       return showResults(searchResultData);
-    else if (searchResultData.isEmpty && isSearchBarActive)
+    else if (searchResultData.isEmpty && isSearchBarActive && searchBarTextController.text.isNotEmpty)
       return showNoResultsFoundWidget();
     else
       return showResults(initialData);
   }
 
+/// loadData() is a sample method that loads sample data into the list (initialData variable)
   void loadData() {
     initialData = [
       Data('sample', "sample meaning1"),
@@ -152,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+/// Shows No results Found Message when there is no relevant data.
   Widget showNoResultsFoundWidget() {
     return Center(
       child: Text(
