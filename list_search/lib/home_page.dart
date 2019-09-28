@@ -133,9 +133,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _getBody() {
-    return searchResultData.isEmpty
-        ? showResults(initialData)
-        : showResults(searchResultData);
+    if (isSearchBarActive && searchResultData.isNotEmpty)
+      return showResults(searchResultData);
+    else if (searchResultData.isEmpty && isSearchBarActive)
+      return showNoResultsFoundWidget();
+    else
+      return showResults(initialData);
   }
 
   void loadData() {
@@ -147,5 +150,14 @@ class _MyHomePageState extends State<MyHomePage> {
       Data('Other', "Other"),
     ];
     setState(() {});
+  }
+
+  Widget showNoResultsFoundWidget() {
+    return Center(
+      child: Text(
+        "No Results Found",
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 }
